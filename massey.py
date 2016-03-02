@@ -23,21 +23,34 @@ def separate(json_stats, team_number):
 	y_score_mod = 0
 	m_filler = 0
 	end_list = -1
+	team_len = len(teams)
 	for i in json_stats:
+		'''
 		if i['home']['team'] not in teams:
 			teams[i['home']['team']] = count
 			count += count_add
 		if i['away']['team'] not in teams:
 			teams[i['away']['team']] = count
 			count += count_add
-
+		'''
+		#theoretically does the same thing as the 2 if statements above
+		teams.setdefault(i['home']['team'], team_len)
+		teams.setdefault(i['away']['team'], team_len)
+		row = [0] * team_len
+		'''
 		y.append(i['home']['pts'] - i['away']['pts'] - advantage)
 		m.append([m_filler for x in range(team_number)])
 		m[end_list][teams[i['home']['team']]] = home_team
 		m[end_list][teams[i['away']['team']]] = away_team
 	m.append(m_score_mod for i in range(team_number))
 	y.append(y_score_mod)
-
+	   '''
+		row[teams[i['home']['team']]] = 1
+		row[teams[i['away']['team']]] = -1
+		m.append(row)
+		y.append(g['home']['pts'] - g['away']['pts'])
+	m.append(1 * team_len)
+	y.append(0)
 	return (np.array(m), np.array(y), teams)
 
 def team_ranks(rank, teams):
